@@ -1,20 +1,21 @@
-# Kubernetes Manifests Repository for DriftGuard
+# Kubernetes Manifests Repository for [DriftGuard](https://github.com/driftguard/driftGuard/)
 
 This repository contains sample Kubernetes manifests that can be used to test and demonstrate DriftGuard's configuration drift detection capabilities.
 
-## 🎯 Purpose
+## Purpose
 
 This repository serves as the **"desired state"** that DriftGuard monitors against. DriftGuard will:
+
 1. Clone this repository
 2. Parse the Kubernetes manifests
 3. Compare them with the live state in your Kubernetes cluster
 4. Detect any configuration drift between Git and live state
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 k8s-manifests/
-├── README.md                    # This file
+├── README.md                   
 ├── namespaces/                  # Namespace definitions
 │   ├── driftguard-demo.yaml
 │   └── monitoring.yaml
@@ -46,7 +47,7 @@ k8s-manifests/
     └── storage-class.yaml
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Clone This Repository
 
@@ -61,7 +62,7 @@ Update your DriftGuard configuration (`backend/configs/config.yaml`):
 
 ```yaml
 git:
-  repository_url: "file:///path/to/your/k8s-manifests"  # Local file path
+  repository_url: "file:///path/to/your/k8s-manifests" # Local file path
   # OR for remote repository:
   # repository_url: "https://github.com/your-username/k8s-manifests.git"
   default_branch: main
@@ -70,13 +71,14 @@ git:
 
 kubernetes:
   namespaces: ["driftguard-demo", "monitoring"]
-  resources: [
-    "deployments",
-    "services", 
-    "configmaps",
-    "secrets",
-    "persistentvolumeclaims"
-  ]
+  resources:
+    [
+      "deployments",
+      "services",
+      "configmaps",
+      "secrets",
+      "persistentvolumeclaims",
+    ]
 ```
 
 ### 3. Deploy Initial State
@@ -184,7 +186,7 @@ kubectl patch configmap nginx-config -n driftguard-demo -p '{
 curl -X POST http://localhost:8080/api/v1/analyze
 ```
 
-## 🔄 Resolving Drift
+## Resolving Drift
 
 ### Method 1: Revert to Git State
 
@@ -210,7 +212,7 @@ kubectl set image deployment/nginx-app nginx=nginx:1.24 -n driftguard-demo
 curl -X POST http://localhost:8080/api/v1/analyze
 ```
 
-## 📊 Monitoring Drift
+## Monitoring Drift
 
 ### Check Active Drifts
 
@@ -239,7 +241,7 @@ curl http://localhost:8080/api/v1/drift-records/Service:driftguard-demo:nginx-se
 curl http://localhost:8080/api/v1/drift-records/ConfigMap:driftguard-demo:nginx-config
 ```
 
-## 🔧 Advanced Testing Scenarios
+## Advanced Testing Scenarios
 
 ### Multi-Environment Testing
 
@@ -276,7 +278,7 @@ done
 curl -X POST http://localhost:8080/api/v1/analyze
 ```
 
-## 🛠️ Customization
+## Customization
 
 ### Adding New Applications
 
@@ -309,7 +311,7 @@ applications/
 │   │   └── production/
 ```
 
-## 📈 Best Practices
+## Best Practices
 
 ### 1. Git Workflow
 
@@ -339,7 +341,7 @@ applications/
 - Audit drift records
 - Monitor for unauthorized changes
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -366,7 +368,7 @@ kubectl apply --dry-run=client -f applications/nginx-app/
 
 ## 📚 Additional Resources
 
-- [DriftGuard Documentation](../README.md)
+- [DriftGuard Documentation](https://github.com/DriftGuard/DriftGuard/blob/main/README.md)
 - [Kubernetes Manifests Best Practices](https://kubernetes.io/docs/concepts/configuration/overview/)
 - [GitOps Principles](https://www.gitops.tech/)
 - [Configuration Drift Management](https://www.cncf.io/blog/2020/12/17/solving-configuration-drift-using-gitops-with-argo-cd/)
@@ -374,6 +376,7 @@ kubectl apply --dry-run=client -f applications/nginx-app/
 ## 🤝 Contributing
 
 Feel free to contribute to this repository by:
+
 - Adding new sample applications
 - Improving manifest configurations
 - Adding environment-specific examples
@@ -381,4 +384,9 @@ Feel free to contribute to this repository by:
 
 ---
 
-**Happy Drift Detection! 🚀** 
+## CODEOWNERS
+
+[Arpit Srivastava](https://github.com/Arpit529Srivastava)
+[Shreyansh Pathak](https://github.com/Shrey327)
+
+**Happy Drift Detection! **
