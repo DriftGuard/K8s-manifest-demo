@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-app
+  namespace: driftguard-demo
+  labels:
+    app: nginx
+    environment: demo
+    managed-by: driftguard
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+        environment: demo
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.24
+        ports:
+        - containerPort: 80
+          name: http
+        - containerPort: 443
+          name: https
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        env:
+        - name: NGINX_ENV
+          value: "production"
+        - name: LOG_LEVEL
+          value: "info"
+        - name: NGINX_PORT
+          value: "80"
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d
+          readOnly: true
+        - name: nginx-logs
+          mountPath: /var/log/nginx
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+      - name: nginx-logs
+        emptyDir: {} 

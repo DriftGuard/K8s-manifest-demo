@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-app
+  namespace: driftguard-demo
+  labels:
+    app: redis
+    environment: demo
+    managed-by: driftguard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+        environment: demo
+    spec:
+      containers:
+      - name: redis
+        image: redis:7.0-alpine
+        ports:
+        - containerPort: 6379
+          name: redis
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        env:
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: redis-secret
+              key: password
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_DB
+          value: "0"
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+        - name: redis-config
+          mountPath: /usr/local/etc/redis
+          readOnly: true
+        livenessProbe:
+          tcpSocket:
+            port: 6379
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: 6379
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: redis-data
+        persistentVolumeClaim:
+          claimName: redis-pvc
+      - name: redis-config
+        configMap:
+          name: redis-config 

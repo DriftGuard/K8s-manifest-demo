@@ -1,0 +1,25 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: fast-ssd
+  labels:
+    managed-by: driftguard
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp3
+  iops: "3000"
+  throughput: "125"
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: slow-hdd
+  labels:
+    managed-by: driftguard
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp2
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true 
